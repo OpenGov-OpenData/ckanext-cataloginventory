@@ -1,0 +1,36 @@
+{
+  "dataset_fields_map": [
+    {"field_name": "title",             "label": "Title"},
+    {"field_name": "name",              "label": "Dataset ID"},
+    {"field_name": "notes",             "label": "Description"},
+    {"field_name": "tag_string",        "label": "Tags"},
+    {"field_name": "license_id",        "label": "License"},
+    {"field_name": "owner_org",         "label": "Organization"},
+    {"field_name": "group",             "label": "Groups"},
+    {"field_name": "url",               "label": "Source"},
+    {"field_name": "version",           "label": "Version"},
+    {"field_name": "author",            "label": "Author"},
+    {"field_name": "author_email",      "label": "Author Email"},
+    {"field_name": "maintainer",        "label": "Maintainer"},
+    {"field_name": "maintainer_email",  "label": "Maintainer Email"}
+  ],
+  "ordered_fields": [
+    {"id":"Title"},
+    {"id":"Description"},
+    {"id":"Dataset ID"},
+    {"id":"Tags"},
+    {"id":"License"},
+    {"id":"Organization"},
+    {"id":"Groups"},
+    {"id":"Source"},
+    {"id":"Version"},
+    {"id":"Author"},
+    {"id":"Author Email"},
+    {"id":"Maintainer"},
+    {"id":"Maintainer Email"},
+    {"id":"Created"},
+    {"id":"Last Updated"},
+    {"id":"Topic"},
+    {"id":"Dataset URL"}
+  ]
+}

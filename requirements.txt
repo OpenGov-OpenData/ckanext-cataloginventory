@@ -1,0 +1,2 @@
+ckanapi
+future>=0.18.2
