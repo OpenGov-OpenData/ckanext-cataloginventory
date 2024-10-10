@@ -23,7 +23,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [2.9, 2.7]
+        ckan-version: [2.9]
       fail-fast: false
 
     name: CKAN ${{ matrix.ckan-version }}
@@ -32,7 +32,7 @@ jobs:
       image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
     services:
       solr:
-        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
+        image: ckan/ckan-solr:${{ matrix.ckan-version }}
       postgres:
         image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
         env:
@@ -66,15 +66,19 @@ jobs:
       if: ${{ matrix.ckan-version != '2.7' }}
       run: |
         ckan -c test.ini db init
-    - name: Setup extension (CKAN < 2.9)
-      if: ${{ matrix.ckan-version == '2.7' }}
-      run: |
-        wget https://raw.githubusercontent.com/OpenGov-OpenData/ckanext-xloader/0.10.0-opengov/full_text_function.sql
-        psql -d postgresql://datastore_write:pass@postgres/datastore_test -f full_text_function.sql
-        paster --plugin=ckan db init -c test.ini
     - name: Run tests (CKAN >= 2.9)
       if: ${{ matrix.ckan-version != '2.7' }}
-      run: pytest --ckan-ini=test.ini --cov=ckanext.cataloginventory --cov-fail-under=94 --disable-warnings ckanext/cataloginventory/tests
-    - name: Run tests (CKAN < 2.9)
-      if: ${{ matrix.ckan-version == '2.7' }}
-      run: nosetests --ckan --with-pylons=./test.ini ckanext.cataloginventory.tests.test_plugin
+      run: pytest --ckan-ini=test.ini --cov=ckanext.cataloginventory --cov-report xml:coverage.xml --cov-fail-under=94 --disable-warnings ckanext/cataloginventory/tests
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      with:
+        args: >
+          -Dsonar.projectKey=ckanext-showcase
+          -Dsonar.sources=ckanext/showcase
+          -Dsonar.tests=ckanext/showcase/tests
+          -Dsonar.exclusions=ckanext/showcase/tests/**
+          -Dsonar.python.coverage.reportPaths=coverage.xml
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_API_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_EXTERNAL_URL }}
+
