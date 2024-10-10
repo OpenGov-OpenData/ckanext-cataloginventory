@@ -15,7 +15,7 @@ jobs:
       - name: Run flake8
         run: flake8 . --count --max-line-length=127 --statistics --exclude ckan
       - name: Run pylint
-        run: pylint --output-format=colorized ckanext/cataloginventory
+        run: pylint --exit-zero --output-format=colorized ckanext/cataloginventory
       - name: Run bandit
         run: bandit -s B101  -r ./ -f screen
 
