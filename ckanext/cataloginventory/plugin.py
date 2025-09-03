@@ -2,7 +2,6 @@ import logging
 from datetime import datetime
 
 import ckanapi
-import ckan.model as model   # pylint: disable=R0402
 import ckan.plugins as p
 
 from ckan.common import config
@@ -289,11 +288,18 @@ class CataloginventoryPlugin(p.SingletonPlugin):  # pylint: disable=W0612
 
     @staticmethod
     def update_last_modified_dates(catalog_res_id):
-        # Update last modified dates
-        package = model.Package.get(CATALOG_PACKAGE_ID)
-        resource = model.Resource.get(catalog_res_id)
-        if package and resource:
-            package.metadata_modified = datetime.utcnow()
-            resource.last_modified = datetime.utcnow()
-            package.save()
-            resource.save()
+        # Update last modified dates using CKAN API actions
+        try:
+            local_ckan = ckanapi.LocalCKAN()  # running as site user
+
+            # Update package metadata_modified
+            package_dict = local_ckan.action.package_show(id=CATALOG_PACKAGE_ID)
+            package_dict['metadata_modified'] = datetime.utcnow()
+            local_ckan.action.package_update(**package_dict)
+
+            # Update resource last_modified
+            resource_dict = local_ckan.action.resource_show(id=catalog_res_id)
+            resource_dict['last_modified'] = datetime.utcnow()
+            local_ckan.action.resource_update(**resource_dict)
+        except Exception as e:
+            log.warning(f"Failed to update last modified dates: {e}")

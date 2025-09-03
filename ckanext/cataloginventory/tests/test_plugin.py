@@ -132,28 +132,6 @@ class TestCatalogBase(object):
         self.catalog_data_dump = self.get_catalog()  # pylint: disable=W0201
 
 
-# todo Create Test it after refactor workers call
-# class TestCatalogInventoryResourceNotExist(TestCatalogBase):
-#
-#     def test_catalog_resource_does_not_exist(self):
-#
-#         # check that catalog resource doesnot exist
-#         catalog = helpers.call_action('package_show', id=CATALOG_PACKAGE_ID)
-#         assert len(catalog['resources']), 0
-#         # create new dataset
-#
-#         dataset = factories.Dataset(
-#             owner_org=self.org['id'],
-#             name='den-dataset'
-#         )
-#         # check that resource was created
-#         catalog = helpers.call_action('package_show', id=CATALOG_PACKAGE_ID)
-#         pprint(catalog)
-#         assert len(catalog['resources']), 1
-#
-#         # check that resource contain newly created dataset
-#         assert True, self.check_catalog_res_contain_dataset(dataset)
-
 class TestCatalogPackageDoesNotExist(TestCatalogBase):  # pylint: disable=W0612
 
     @classmethod
